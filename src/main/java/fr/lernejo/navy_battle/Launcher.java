@@ -10,8 +10,9 @@ import java.util.concurrent.Executors;
 public class Launcher {
     public static void main(String[] args) throws IOException {
         int port = Integer.parseInt(args[0]);
+        BattleGame game = new BattleGame();
         HttpServer server = createServer(port);
-        configureContexts(server, port);
+        configureContexts(server, game);
         startServer(server);
         startClientIfRequested(args, port);
     }
@@ -23,9 +24,10 @@ public class Launcher {
         return server;
     }
 
-    private static void configureContexts(HttpServer server, int port) {
+    private static void configureContexts(HttpServer server, BattleGame game) {
         server.createContext("/ping", new PingHandler());
-        server.createContext("/api/game/start", new GameStartHandler(port));
+        server.createContext("/api/game/start", new GameStartHandler(game));
+        server.createContext("/api/game/fire", new FireHandler(game));
     }
 
     private static void startServer(HttpServer server) {
@@ -44,4 +46,3 @@ public class Launcher {
         }
     }
 }
-

@@ -11,10 +11,10 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class GameStartHandler implements HttpHandler {
-    private final int serverPort;
+    private final BattleGame game;
 
-    public GameStartHandler(int serverPort) {
-        this.serverPort = serverPort;
+    public GameStartHandler(BattleGame game) {
+        this.game = game;
     }
 
     @Override
