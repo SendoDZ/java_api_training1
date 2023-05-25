@@ -11,6 +11,11 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class GameStartHandler implements HttpHandler {
+    private final int serverPort;
+
+    public GameStartHandler(int serverPort) {
+        this.serverPort = serverPort;
+    }
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if (!"POST".equals(exchange.getRequestMethod())) {
@@ -43,7 +48,7 @@ public class GameStartHandler implements HttpHandler {
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("id", "2aca7611-0ae4-49f3-bf63-75bef4769028");
-        responseJson.put("url", "http://localhost:9876");
+        responseJson.put("url", "http://localhost:" + serverPort);
         responseJson.put("message", "May the best code win");
 
         sendResponse(exchange, 202, responseJson.toString());

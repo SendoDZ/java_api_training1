@@ -12,7 +12,7 @@ public class Launcher {
         int port = Integer.parseInt(args[0]);
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/ping", new PingHandler());
-        server.createContext("/api/game/start", new GameStartHandler());
+        server.createContext("/api/game/start", new GameStartHandler(port));
 
         ExecutorService executor = Executors.newFixedThreadPool(1);
         server.setExecutor(executor);
