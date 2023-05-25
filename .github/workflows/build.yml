@@ -1,4 +1,4 @@
-name: Build
+name: Build and Test
 
 on: [push, pull_request]
 
@@ -39,4 +39,3 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: 7ffaabba-b312-4074-92e5-05c55bfbe56b
-
