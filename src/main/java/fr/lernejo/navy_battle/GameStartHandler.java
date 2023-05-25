@@ -16,42 +16,44 @@ public class GameStartHandler implements HttpHandler {
     public GameStartHandler(int serverPort) {
         this.serverPort = serverPort;
     }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if (!"POST".equals(exchange.getRequestMethod())) {
-            exchange.sendResponseHeaders(404, 0);
-            exchange.getResponseBody().close();
+            sendResponse(exchange, 404, "Not Found");
             return;
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-        reader.close();
-        String jsonString = sb.toString();
+        JSONObject requestJson = getRequestBody(exchange);
 
-        JSONObject requestJson;
-        try {
-            requestJson = new JSONObject(jsonString);
-
-            if (!requestJson.has("id") || !requestJson.has("url") || !requestJson.has("message")) {
-                sendResponse(exchange, 400, "Bad Request");
-                return;
-            }
-        } catch (Exception e) {
+        if (requestJson == null) {
             sendResponse(exchange, 400, "Bad Request");
             return;
         }
 
+        JSONObject responseJson = generateResponseJson();
+        sendResponse(exchange, 202, responseJson.toString());
+    }
+
+    private JSONObject getRequestBody(HttpExchange exchange) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            return new JSONObject(sb.toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private JSONObject generateResponseJson() {
         JSONObject responseJson = new JSONObject();
         responseJson.put("id", "2aca7611-0ae4-49f3-bf63-75bef4769028");
         responseJson.put("url", "http://localhost:" + serverPort);
         responseJson.put("message", "May the best code win");
-
-        sendResponse(exchange, 202, responseJson.toString());
+        return responseJson;
     }
 
     private void sendResponse(HttpExchange exchange, int httpStatus, String response) throws IOException {
