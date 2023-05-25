@@ -18,5 +18,16 @@ public class Launcher {
         server.setExecutor(executor);
 
         server.start();
+
+        if (args.length > 1) {
+            String adversaryUrl = args[1];
+
+            BattleGameClient battleGameClient = new BattleGameClient();
+            try {
+                battleGameClient.sendStartGameRequest(adversaryUrl, port);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
