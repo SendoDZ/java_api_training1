@@ -26,6 +26,8 @@ public class Launcher {
     private static void configureContexts(HttpServer server, int port) {
         server.createContext("/ping", new PingHandler());
         server.createContext("/api/game/start", new GameStartHandler(port));
+        server.createContext("/api/game/fire", new FireHandler());
+
     }
 
     private static void startServer(HttpServer server) {
