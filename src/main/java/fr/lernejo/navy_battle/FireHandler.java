@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.util.Random;
 
 public class FireHandler implements HttpHandler {
-    private static final String[] CONSEQUENCES = {"miss", "hit", "sunk"};
+    private final String[] CONSEQUENCES = {"miss", "hit", "sunk"};
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -22,6 +22,7 @@ public class FireHandler implements HttpHandler {
         responseJson.put("shipLeft", shipLeft);
 
         String response = responseJson.toString();
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
@@ -35,7 +36,7 @@ public class FireHandler implements HttpHandler {
 
     private String getConsequence(String cell) {
         Random random = new Random();
-        return CONSEQUENCES[random.nextInt(CONSEQUENCES.length)];
+        return this.CONSEQUENCES[random.nextInt(this.CONSEQUENCES.length)];
     }
 
     private boolean checkIfShipLeft() {
